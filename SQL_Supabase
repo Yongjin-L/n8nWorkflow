@@ -1,0 +1,42 @@
+-- Enable the pgvector extension to work with embedding vectors
+-- create extension vector;
+
+-- Drop the existing documents table if it exists
+DROP TABLE IF EXISTS documents;
+
+-- Create a table to store your documents
+CREATE TABLE documents (
+  id bigserial primary key,
+  content text, -- corresponds to Document.pageContent
+  metadata jsonb, -- corresponds to Document.metadata
+  embedding vector(3072)
+  -- 1536 works for OpenAI embeddings, 1024 for opensource, 768 for gemini 004 change if needed
+);
+
+-- Create a function to search for documents
+CREATE OR REPLACE FUNCTION match_documents (
+  query_embedding vector(3072),
+  match_count int DEFAULT NULL,
+  filter jsonb DEFAULT '{}'
+) RETURNS TABLE (
+  id bigint,
+  content text,
+  metadata jsonb,
+  similarity float
+)
+LANGUAGE plpgsql
+AS $$
+#variable_conflict use_column
+BEGIN
+  RETURN QUERY
+  SELECT
+    id,
+    content,
+    metadata,
+    1 - (documents.embedding <=> query_embedding) AS similarity
+  FROM documents
+  WHERE metadata @> filter
+  ORDER BY documents.embedding <=> query_embedding
+  LIMIT match_count;
+END;
+$$;
