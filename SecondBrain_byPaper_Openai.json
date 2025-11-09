@@ -1,0 +1,699 @@
+{
+  "name": "SecondBrain_byPaper_Openai",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -656,
+        1072
+      ],
+      "id": "6ea78663-cf2f-4f2d-8e68-43047c2afd87",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "9rC7WolnpwERTthJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### 📚 Text Split rules\n\n#### 1. separator \"##\" = annotations by paper are embedded together.\n\n#### 2. If the annotations are over 2000 characters, split by 2000 with 200 overlap.",
+        "height": 460,
+        "width": 348,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1360,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "d19d04f3-5231-4e47-bed7-9f24a4a8f582",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nUse the second brain to answer your question.",
+        "options": {
+          "inputPlaceholder": "Type your question...",
+          "subtitle": "Highlights and notes from Zotero",
+          "title": "Second Brain",
+          "customCss": ":root {\n  /* Colors - Modernized Palette */\n  --chat--color-primary: #e53e5f;\n  --chat--color-primary-shade-50: #d73655;\n  --chat--color-primary-shade-100: #c12f4a;\n  --chat--color-secondary: #1fa890;\n  --chat--color-secondary-shade-50: #18927e;\n  --chat--color-white: #ffffff;\n  --chat--color-light: #f5f7fa;\n  --chat--color-light-shade-50: #e1e5ed;\n  --chat--color-light-shade-100: #c7ccd6;\n  --chat--color-medium: #b4b8c2;\n  --chat--color-dark: #1c1f3a;\n  --chat--color-disabled: #9aa0ab;\n  --chat--color-typing: #55575e;\n\n  /* Base Layout */\n  --chat--spacing: 1rem;\n  --chat--border-radius: 0.75rem;\n  --chat--transition-duration: 0.25s;\n  --chat--font-family: (\n    -apple-system,\n    BlinkMacSystemFont,\n    'Segoe UI',\n    Roboto,\n    Oxygen-Sans,\n    Ubuntu,\n    Cantarell,\n    'Helvetica Neue',\n    sans-serif\n  );\n\n  /* Window Dimensions */\n  --chat--window--width: 420px;\n  --chat--window--height: 640px;\n  --chat--window--bottom: var(--chat--spacing);\n  --chat--window--right: var(--chat--spacing);\n  --chat--window--z-index: 9999;\n  --chat--window--border: 1px solid var(--chat--color-light-shade-50);\n  --chat--window--border-radius: var(--chat--border-radius);\n  --chat--window--margin-bottom: var(--chat--spacing);\n  --chat--window--shadow: 0 4px 20px rgba(0, 0, 0, 0.08);\n\n  /* Header Styles */\n  --chat--header-height: auto;\n  --chat--header--padding: var(--chat--spacing);\n  --chat--header--background: var(--chat--color-dark);\n  --chat--header--color: var(--chat--color-light);\n  --chat--heading--font-size: 1.4em;\n  --chat--subtitle--font-size: 0.9em;\n  --chat--subtitle--line-height: 1.6;\n\n  /* Message Styles */\n  --chat--message--font-size: 1rem;\n  --chat--message--padding: 0.9rem 1.1rem;\n  --chat--message--border-radius: 1rem;\n  --chat--message-line-height: 1.5;\n  --chat--message--margin-bottom: calc(var(--chat--spacing) * 0.75);\n  --chat--message--bot--background: var(--chat--color-white);\n  --chat--message--bot--color: var(--chat--color-dark);\n  --chat--message--user--background: var(--chat--color-secondary);\n  --chat--message--user--color: var(--chat--color-white);\n  --chat--message--pre--background: rgba(0, 0, 0, 0.04);\n  --chat--messages-list--padding: var(--chat--spacing);\n\n  /* Toggle Button */\n  --chat--toggle--size: 60px;\n  --chat--toggle--border-radius: 50%;\n  --chat--toggle--background: var(--chat--color-primary);\n  --chat--toggle--hover--background: var(--chat--color-primary-shade-50);\n  --chat--toggle--active--background: var(--chat--color-primary-shade-100);\n  --chat--toggle--color: var(--chat--color-white);\n  --chat--toggle--shadow: 0 4px 12px rgba(0,0,0,0.12);\n\n  /* Input Area */\n  --chat--textarea--height: 52px;\n  --chat--textarea--max-height: 28rem;\n  --chat--input--font-size: 1rem;\n  --chat--input--padding: 0.9rem;\n  --chat--input--background: var(--chat--color-white);\n  --chat--input--text-color: var(--chat--color-dark);\n  --chat--input--line-height: 1.5;\n  --chat--input--placeholder--font-size: 0.95rem;\n\n  /* Button Styles */\n  --chat--button--color: var(--chat--color-light);\n  --chat--button--background: var(--chat--color-primary);\n  --chat--button--padding: 0.5rem 1rem;\n  --chat--button--border-radius: 0.5rem;\n  --chat--button--hover--background: var(--chat--color-primary-shade-50);\n\n  /* Send and File Buttons */\n  --chat--input--send--button--background: var(--chat--color-primary);\n  --chat--input--send--button--color: var(--chat--color-white);\n  --chat--input--send--button--background-hover: var(--chat--color-primary-shade-50);\n  --chat--input--send--button--color-hover: var(--chat--color-white);\n  --chat--input--file--button--background: var(--chat--color-white);\n  --chat--input--file--button--color: var(--chat--color-secondary);\n  --chat--input--file--button--color-hover: var(--chat--color-secondary-shade-50);\n\n  /* Body and Footer */\n  --chat--body--background: var(--chat--color-light);\n  --chat--footer--background: var(--chat--color-light);\n  --chat--footer--color: var(--chat--color-dark);\n}\n\n/* Modern Chat Message Max Width */\n.chat-message {\n  max-width: 65%;\n  border-radius: var(--chat--message--border-radius);\n  box-shadow: 0 2px 8px rgba(0,0,0,0.04);\n  transition: transform var(--chat--transition-duration) ease, box-shadow var(--chat--transition-duration) ease;\n}\n\n.chat-message:hover {\n  transform: translateY(-1px);\n  box-shadow: 0 4px 12px rgba(0,0,0,0.06);\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -464,
+        0
+      ],
+      "id": "9c30de61-935a-471f-ae88-ec5f67beeefc",
+      "name": "When chat message received",
+      "webhookId": "4091fa09-fb9a-4039-9411-7104d213f601"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        448
+      ],
+      "id": "b5aa8942-9cd5-4c2f-bd77-7a0ceb921bac",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "9rC7WolnpwERTthJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### 🐕 2. Retriever Flow",
+        "height": 460,
+        "width": 680,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1856,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "28bc73a1-e64a-47bf-ac1c-ffe644894ea5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 📚 Embedding Models\n\nThe Insert and Retrieve operation use **the same** embedding node.\n\nThis is to ensure that they are using the **exact same embeddings and settings**.",
+        "height": 480,
+        "width": 592,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1072,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "0cf8c647-418c-4d1a-8952-766145afca72",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "annotations",
+          "mode": "list",
+          "cachedResultName": "annotations"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -1184,
+        -16
+      ],
+      "id": "6e034ef9-84fb-433c-8dbb-c11a2d5c0cd0",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SYG6O7JqDSWeZqRP",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1840,
+        -16
+      ],
+      "id": "15296fe5-f13b-4a01-9c52-059ec4c7de16",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/files/SecondBrain/*.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        -16
+      ],
+      "id": "7967ba21-423d-45b7-a0d4-0c16fe0cf221",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        -16
+      ],
+      "id": "79b974e2-1572-453c-806c-7ac10974b4ae",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -960,
+        224
+      ],
+      "id": "f2023762-dca5-482a-a4fe-f70f330181e3",
+      "name": "Default Data Loader",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "separator": "##",
+        "chunkSize": 2000,
+        "chunkOverlap": 200
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        528
+      ],
+      "id": "5e6e4881-f908-4e11-bae4-decfb4a6087b",
+      "name": "Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Work with your content in Supabase Vector Store.",
+        "tableName": {
+          "__rl": true,
+          "value": "annotations",
+          "mode": "list",
+          "cachedResultName": "annotations"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        336
+      ],
+      "id": "948327d8-d991-4440-b94c-c887d0f42038",
+      "name": "Supabase Vector Store2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SYG6O7JqDSWeZqRP",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "annotations",
+        "limit": 1
+      },
+      "id": "d6372b9d-af25-4139-82cb-a05d65b053ae",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Keep Supabase Instance Alive",
+      "type": "n8n-nodes-base.supabase",
+      "creator": "Lucas Peyrin",
+      "position": [
+        -1344,
+        1104
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "supabaseApi": {
+          "id": "SYG6O7JqDSWeZqRP",
+          "name": "Supabase account"
+        }
+      },
+      "notes": "© 2025 Lucas Peyrin"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "eae3b70d-47a4-47d4-9fa4-2139322958d5",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Every 6 Days",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "creator": "Lucas Peyrin",
+      "position": [
+        -1568,
+        1104
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## Optional: Keep the Database Awake\n\n**What it does:** Free Supabase projects \"go to sleep\" after a week of inactivity. This scheduled trigger runs a tiny query every 6 days to keep your database awake and ready.\n**Action:** You can delete this if you have a paid Supabase plan or a self-hosted instance.",
+        "height": 480,
+        "width": 544,
+        "color": 7
+      },
+      "id": "162c6693-8831-4421-83f4-b7abf00df620",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Sticky Note22",
+      "type": "n8n-nodes-base.stickyNote",
+      "creator": "Lucas Peyrin",
+      "position": [
+        -1648,
+        832
+      ],
+      "typeVersion": 1,
+      "notes": "© 2025 Lucas Peyrin"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Every time you receive a query, you must call the Supabase vector store tool before giving an answer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "579aed76-9644-42d1-ac13-7369059ff1c2",
+      "name": "Second Brain AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        512
+      ],
+      "id": "47a69b05-8d25-4f9e-b01c-7eef7755f0d7",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "# Part 1. Embedding",
+        "height": 928,
+        "width": 1232,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1904,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "c384686f-b396-47ef-8997-be6f8e04d300",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### 📚 Text parshing codes\n\n#### 1. For unique parshing strategy use this node.\n\n#### 2. This should be before 'Supabase Vector store\" node.\n\n#### 3. Consider Text Splitter node.",
+        "height": 460,
+        "width": 348,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1776,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "75a8f3be-b59d-4bb3-a578-fd5d243496c0",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        528
+      ],
+      "id": "13240e96-d0c4-40d5-95dc-f88c254b3c14",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "# Part 2. RAG with AI",
+        "height": 928,
+        "width": 1120,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -608,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "29a7bdd5-3b09-491a-9aa5-1ec65f971ece",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 AI model options\n\n#### 1. API models: [OpenAI](https://platform.openai.com/settings/organization/billing/overview), [Grok](https://console.x.ai/team/8054e9e8-fe43-45c4-83d6-1246d8c9a613), [Gemini](https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/cost?project=gen-lang-client-0798612983&pli=1&inv=1&invt=Ab5M3g)\n\n#### 2. Opensource models: GPT-oss:20b, Gemma3:27b, Llama3.2 \n[Huggingface leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/)",
+        "height": 476,
+        "width": 524,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "7215248f-4d4b-4260-942d-f477d16dcb53",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "model": "gemma3:27b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        1024
+      ],
+      "id": "9e8a770c-67e3-4a08-b9d8-b910b2dbab5f",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "OxNv5NsZQUNS0Kbl",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        1168
+      ],
+      "id": "18b70166-f577-48a5-b128-7745e255a59d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Swt6u8465kD6AbiF",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        1168
+      ],
+      "id": "3ba7b456-3215-4ff5-a41e-38e85048f7a7",
+      "name": "Anthropic Chat Model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        1168
+      ],
+      "id": "1e9c3303-b32c-4444-a870-a19ba16ff305",
+      "name": "xAI Grok Chat Model",
+      "credentials": {
+        "xAiApi": {
+          "id": "cHIJ9cFOAsP9tFDH",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 💆 Chat Memory options\n\n#### 1. Simple memory from n8n\n\n#### 2. Postgres in [Supabase](https://supabase.com/dashboard/project/shswmssgqsfqukknjzot/editor/17860?schema=public)",
+        "height": 348,
+        "width": 380,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "f9cecb7c-54a1-4974-afa0-f07300e56438",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        496
+      ],
+      "id": "5c25c25d-29d8-49fe-ba87-58526a1b94fa",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "yPX7CDQIXEoAPXHJ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "mxbai-embed-large:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        1072
+      ],
+      "id": "80958191-926d-4d95-b391-a0ec7c5ab01b",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "OxNv5NsZQUNS0Kbl",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        1072
+      ],
+      "id": "eb41ad60-58b9-45f7-b8a6-e3b65e31c1e1",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Swt6u8465kD6AbiF",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Vector Store2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Second Brain AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Second Brain AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Second Brain AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every 6 Days": {
+      "main": [
+        [
+          {
+            "node": "Keep Supabase Instance Alive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Second Brain AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Second Brain AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4d567485-26cd-4c01-b0e1-63452f13c655",
+  "meta": {
+    "templateId": "rag-starter-template",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d7efb7d318283ac235704dc6e44dd4a1cbd38acba437f0dcc4835f7c3b5c2178"
+  },
+  "id": "jPODhmsazVDEcEPP",
+  "tags": []
+}
